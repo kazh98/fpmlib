@@ -1,6 +1,10 @@
 API Reference
 =============
 
-.. automodule:: fpmlib.typing
+.. automodule:: fpmlib
+    :members:
+    :show-inheritance:
+
+.. automodule:: fpmlib.contracts
     :members:
     :show-inheritance:

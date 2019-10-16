@@ -9,6 +9,7 @@ __all__ = ['FixedPointMap', 'NonexpansiveMap', 'FirmlyNonexpansiveMap', 'MetricP
 class FixedPointMap(Callable, Container):
     """
     An abstract base class that expresses a mapping :math:`T` from a Hilbert space :math:`H` onto itself.
+    This is a superclass of all mappings provided from the `fpmlib` package.
     """
 
     @abstractmethod
