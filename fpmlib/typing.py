@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+"""
+Types appearing in ``fpmlib`` package
+-------------------------------------
+
+``fpmlib`` module is provided with object-oriented design using the abstract base classes infrastructure (``abc`` package).
+``fpmlib.typing`` module provides the abstract base classes used to express each class provided in ``fpmlib`` package.
+The following items are automatically loaded when ``fpmlib`` package is imported.
+"""
+
 from __future__ import annotations
 import numpy as np
 from abc import abstractmethod

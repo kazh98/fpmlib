@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """
-Functions for the validation of the use of fpmlib package.
+``fpmlib.contracts`` module
+---------------------------
+
+This module provides functions for the validation of the use of ``fpmlib`` package.
 """
+
 from typing import Any, Callable
-from . import *
+from .typing import *
 __all__ = [
     'check_fixed_point_map', 'check_nonexpansive_map', 'check_firmly_nonexpansive_map',
     'check_metric_projection',

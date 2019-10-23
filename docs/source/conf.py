@@ -43,7 +43,7 @@ exclude_patterns = []
 
 autodoc_default_flags = [
     'members',
-    'special-members',
+    'show-inheritance',
 ]
 
 
