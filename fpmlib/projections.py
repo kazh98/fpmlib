@@ -34,17 +34,17 @@ class Box(MetricProjection):
         If ``None`` is specified, the fixed point set of the created mapping is unbounded above.
     """
 
-    def __init__(self, lb: Optional[Union[np.ndarray, float]]=None, ub: Optional[Union[np.ndarray, float]]=None):
-        self.lb = lb
-        self.ub = ub
+    def __init__(self, lb: Optional[Union[np.ndarray, float]] = None, ub: Optional[Union[np.ndarray, float]] = None):
+        self._lb = lb
+        self._ub = ub
 
     def __call__(self, x: np.ndarray) -> np.ndarray:
-        return np.clip(x, self.lb, self.ub)
+        return np.clip(x, self._lb, self._ub)
 
     def __contains__(self, x: np.ndarray) -> bool:
-        if self.lb is not None and not (self.lb <= x).all():
+        if self._lb is not None and not (self._lb <= x).all():
             return False
-        if self.ub is not None and not (x <= self.ub).all():
+        if self._ub is not None and not (x <= self._ub).all():
             return False
         return True
 
