@@ -78,6 +78,49 @@ class TestBox(unittest.TestCase):
         p = Box(3, 5)
         self.assertIsNone(p.ndim)
 
+    def test_copying_parameters(self):
+        lb = np.array([1, 2, 3, 4, 5])
+        ub = np.array([6, 7, 8, 9, 10])
+        p = Box(lb, ub)
+        self.assertIsNot(lb, p._lb)
+        self.assertIsNot(ub, p._ub)
+
+    def test_contains1(self):
+        p = Box(3, 5)
+        self.assertFalse(np.array([2]) in p)
+        self.assertTrue(np.array([3]) in p)
+        self.assertTrue(np.array([4]) in p)
+        self.assertTrue(np.array([5]) in p)
+        self.assertFalse(np.array([6]) in p)
+
+    def test_contains2(self):
+        p = Box(np.array([1, 2]), np.array([3, 4]))
+        self.assertFalse(np.array([0, 1]) in p)
+        self.assertFalse(np.array([0, 2]) in p)
+        self.assertFalse(np.array([0, 3]) in p)
+        self.assertFalse(np.array([0, 4]) in p)
+        self.assertFalse(np.array([0, 5]) in p)
+        self.assertFalse(np.array([1, 1]) in p)
+        self.assertTrue(np.array([1, 2]) in p)
+        self.assertTrue(np.array([1, 3]) in p)
+        self.assertTrue(np.array([1, 4]) in p)
+        self.assertFalse(np.array([1, 5]) in p)
+        self.assertFalse(np.array([2, 1]) in p)
+        self.assertTrue(np.array([2, 2]) in p)
+        self.assertTrue(np.array([2, 3]) in p)
+        self.assertTrue(np.array([2, 4]) in p)
+        self.assertFalse(np.array([2, 5]) in p)
+        self.assertFalse(np.array([3, 1]) in p)
+        self.assertTrue(np.array([3, 2]) in p)
+        self.assertTrue(np.array([3, 3]) in p)
+        self.assertTrue(np.array([3, 4]) in p)
+        self.assertFalse(np.array([3, 5]) in p)
+        self.assertFalse(np.array([4, 1]) in p)
+        self.assertFalse(np.array([4, 2]) in p)
+        self.assertFalse(np.array([4, 3]) in p)
+        self.assertFalse(np.array([4, 4]) in p)
+        self.assertFalse(np.array([4, 5]) in p)
+
 
 class TestHalfSpace(unittest.TestCase):
     def test_behavior(self):
@@ -130,6 +173,23 @@ class TestHalfSpace(unittest.TestCase):
         p = HalfSpace(np.ones(5), 1)
         self.assertEqual(p.ndim, 5)
 
+    def test_copying_parameters(self):
+        w = np.ones(10)
+        p = HalfSpace(w, 1)
+        self.assertIsNot(w, p._w)
+
+    def test_contains1(self):
+        p = HalfSpace(np.array([1]), 1)
+        self.assertTrue(np.array([0]) in p)
+        self.assertTrue(np.array([1]) in p)
+        self.assertFalse(np.array([2]) in p)
+
+    def test_contains2(self):
+        p = HalfSpace(np.array([1, -1]), 1)
+        self.assertTrue(np.array([0, 0]) in p)
+        self.assertTrue(np.array([0.5, -0.5]) in p)
+        self.assertFalse(np.array([1, -1]) in p)
+
 
 class TestBall(unittest.TestCase):
     def test_behavior(self):
@@ -176,3 +236,14 @@ class TestBall(unittest.TestCase):
     def test_ndim(self):
         p = Ball(np.ones(5), 1)
         self.assertEqual(p.ndim, 5)
+
+    def test_copying_parameters(self):
+        c = np.ones(10)
+        p = Ball(c, 1)
+        self.assertIsNot(c, p._c)
+
+    def test_contains(self):
+        p = Ball(np.array([1, -2]), 1)
+        self.assertTrue(np.array([1, -2]) in p)
+        self.assertTrue(np.array([1, -1]) in p)
+        self.assertFalse(np.array([1, -0.9]) in p)
