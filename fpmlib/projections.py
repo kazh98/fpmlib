@@ -42,7 +42,7 @@ class Box(MetricProjection):
             return self._ub.shape[0]
         return None
 
-    def __init__(self, lb: Optional[Union[np.ndarray, float]]=None, ub: Optional[Union[np.ndarray, float]]=None):
+    def __init__(self, lb: Optional[Union[np.ndarray, float]] = None, ub: Optional[Union[np.ndarray, float]] = None):
         if isinstance(lb, np.ndarray) and isinstance(ub, np.ndarray) and lb.shape != ub.shape:
             raise ValueError('Vectors lb and ub must have the same number of dimensions')
         self._lb = lb
