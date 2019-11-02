@@ -79,7 +79,7 @@ class TestCheckFixedPointMap(unittest.TestCase):
         check_metric_projection(self.N, 10)
 
     def test_dim3(self):
-        with self.assertRaisesRegex(ValueError, 'Expected 10-dimensional vector, but got 15-dimensional one'):
+        with self.assertRaisesRegex(ValueError, 'Expected MetricProjection on 15-dimensional Euclidean space, but got one on 10-dimensional space'):
             check_metric_projection(self.N, 15)
 
     def test_dim4(self):

@@ -20,7 +20,7 @@ def __check_instance(t: FixedPointMap) -> Callable[[Any], None]:
             raise ValueError('Expected %s, but got %s' % (t.__name__, type(o).__name__))
         o = cast(FixedPointMap, o)
         if ndim is not None and o.ndim is not None and o.ndim != ndim:
-            raise ValueError('Expected %d-dimensional vector, but got %d-dimensional one' % (o.ndim, ndim))
+            raise ValueError('Expected %s on %d-dimensional Euclidean space, but got one on %d-dimensional space' % (t.__name__, ndim, o.ndim))
     T.__doc__ = 'Check if the given argument is an instance of ``%s`` class.' % t.__name__ + r"""
 
     :param o: An object to be validated.
