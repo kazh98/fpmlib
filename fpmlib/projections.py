@@ -45,6 +45,10 @@ class Box(MetricProjection):
     def __init__(self, lb: Optional[Union[np.ndarray, float]] = None, ub: Optional[Union[np.ndarray, float]] = None):
         if isinstance(lb, np.ndarray) and isinstance(ub, np.ndarray) and lb.shape != ub.shape:
             raise ValueError('Vectors lb and ub must have the same number of dimensions')
+        if isinstance(lb, np.ndarray):
+            lb = lb.copy()
+        if isinstance(ub, np.ndarray):
+            ub = ub.copy()
         self._lb = lb
         self._ub = ub
 
@@ -74,14 +78,30 @@ class HalfSpace(MetricProjection):
         A ``float`` value which defines the half-space as its parameter :math:`d`.
     """
 
+    @property
+    def ndim(self):
+        return self._w.shape[0]
+
     def __init__(self, w: np.ndarray, d: float):
-        raise NotImplementedError()
+        if not isinstance(w, np.ndarray) or len(w.shape) != 1:
+            raise ValueError('Parameter w must be a vector.')
+        l = np.linalg.norm(w)
+        if l == 0:
+            raise ValueError('Parameter w must be a nonzero vector.')
+        self._w = w / l
+        self._d = d / l
 
     def __call__(self, x: np.ndarray) -> np.ndarray:
-        raise NotImplementedError()
+        det = self._d - np.inner(self._w, x)
+        if det >= 0:
+            y = x.copy()
+        else:
+            y = det * self._w
+            y += x
+        return y
 
     def __contains__(self, x: np.ndarray) -> bool:
-        raise NotImplementedError()
+        return (self._d - np.inner(self._w, x)) >= 0
 
 
 class Ball(MetricProjection):

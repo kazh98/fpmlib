@@ -77,3 +77,55 @@ class TestBox(unittest.TestCase):
     def test_none_dim(self):
         p = Box(3, 5)
         self.assertIsNone(p.ndim)
+
+
+class TestHalfSpace(unittest.TestCase):
+    def test_behavior(self):
+        p = HalfSpace(np.array([1., 2.]), 3.)
+        np.testing.assert_array_equal(
+            p(np.array([0., 0.])), np.array([0., 0.]))
+        np.testing.assert_array_equal(
+            p(np.array([0., 1.5])), np.array([0., 1.5]))
+        np.testing.assert_array_equal(
+            p(np.array([3., 0.])), np.array([3., 0.]))
+        np.testing.assert_array_equal(
+            p(np.array([3., 0.])), np.array([3., 0.]))
+        np.testing.assert_array_almost_equal(
+            p(np.array([4., 2.])), np.array([3., 0.]))
+
+    def test_behavior_negative(self):
+        p = HalfSpace(np.array([-1., -1.]), -1.)
+        np.testing.assert_array_almost_equal(
+            p(np.array([0., 0.])), np.array([0.5, 0.5]))
+        np.testing.assert_array_equal(
+            p(np.array([0.5, 0.5])), np.array([0.5, 0.5]))
+        np.testing.assert_array_equal(
+            p(np.array([1., 1.])), np.array([1., 1.]))
+        np.testing.assert_array_equal(
+            p(np.array([0., 1.])), np.array([0., 1.]))
+
+    def test_w_changed(self):
+        w = np.array([1., 1.])
+        p = HalfSpace(w, 3.)
+        w[0] = 3.
+        np.testing.assert_equal(
+            p(np.array([3., 0.])), np.array([3., 0.]))
+
+    def test_reallocation(self):
+        p = HalfSpace(np.array([1., 1.]), 3.)
+        x = np.array([1., 1.])
+        self.assertIsNot(p(x), x)
+        x = np.array([3., 3.])
+        self.assertIsNot(p(x), x)
+
+    def test_nonzero(self):
+        with self.assertRaisesRegex(ValueError, 'must be a nonzero vector'):
+            HalfSpace(np.zeros(100), 1)
+
+    def test_matrix(self):
+        with self.assertRaisesRegex(ValueError, 'must be a vector'):
+            HalfSpace(np.ones([5, 5]), 1)
+
+    def test_ndim(self):
+        p = HalfSpace(np.ones(5), 1)
+        self.assertEqual(p.ndim, 5)
