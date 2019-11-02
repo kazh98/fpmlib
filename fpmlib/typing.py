@@ -12,6 +12,7 @@ from __future__ import annotations
 import numpy as np
 from abc import abstractmethod
 from collections.abc import Callable, Container
+from typing import Optional
 __all__ = ['FixedPointMap', 'NonexpansiveMap', 'FirmlyNonexpansiveMap', 'MetricProjection']
 
 
@@ -20,6 +21,16 @@ class FixedPointMap(Callable, Container):
     An abstract base class that expresses a mapping :math:`T` from a Hilbert space :math:`H` onto itself.
     This is a superclass of all mappings provided from the `fpmlib` package.
     """
+
+    @property
+    @abstractmethod
+    def ndim(self) -> Optional[int]:
+        r"""
+        Number of vector dimensions which this mapping deal with.
+        If the value is ``None``, this mapping accepts any vector in arbitrary dimension.
+        """
+
+        raise NotImplementedError()
 
     @abstractmethod
     def __call__(self, x: np.ndarray) -> np.ndarray:
@@ -53,7 +64,8 @@ class FirmlyNonexpansiveMap(NonexpansiveMap):
     @staticmethod
     def from_nonexpansive(T: NonexpansiveMap, alpha: float=0.5) -> FirmlyNonexpansiveMap:
         # TODO: Test this method
-        return __FirmlyNonexpansiveMap(T, alpha)
+        # return __FirmlyNonexpansiveMap(T, alpha)
+        return None
 
 
 class __FirmlyNonexpansiveMap(FirmlyNonexpansiveMap):

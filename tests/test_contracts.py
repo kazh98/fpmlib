@@ -6,6 +6,13 @@ from fpmlib.contracts import *
 
 
 class IdentFixedPointMap(FixedPointMap):
+    @property
+    def ndim(self):
+        return self._ndim
+
+    def __init__(self, ndim=None):
+        self._ndim = ndim
+
     def __call__(self, x):
         return x.copy()
 
@@ -14,6 +21,13 @@ class IdentFixedPointMap(FixedPointMap):
 
 
 class IdentMetricProjection(MetricProjection):
+    @property
+    def ndim(self):
+        return self._ndim
+
+    def __init__(self, ndim=None):
+        self._ndim = ndim
+
     def __call__(self, x):
         return x.copy()
 
@@ -21,10 +35,11 @@ class IdentMetricProjection(MetricProjection):
         return True
 
 
-class TestIsFixedPointMap(unittest.TestCase):
+class TestCheckFixedPointMap(unittest.TestCase):
     def setUp(self):
         self.T = IdentFixedPointMap()
         self.P = IdentMetricProjection()
+        self.N = IdentMetricProjection(10)
 
     def test_positive1(self):
         check_fixed_point_map(self.T)
@@ -56,3 +71,16 @@ class TestIsFixedPointMap(unittest.TestCase):
     def test_negative4(self):
         with self.assertRaisesRegex(ValueError, r"^Expected FirmlyNonexpansiveMap,"):
             check_firmly_nonexpansive_map(self.T)
+
+    def test_dim1(self):
+        check_metric_projection(self.N)
+
+    def test_dim2(self):
+        check_metric_projection(self.N, 10)
+
+    def test_dim3(self):
+        with self.assertRaisesRegex(ValueError, 'Expected 10-dimensional vector, but got 15-dimensional one'):
+            check_metric_projection(self.N, 15)
+
+    def test_dim4(self):
+        check_metric_projection(self.P, 15)

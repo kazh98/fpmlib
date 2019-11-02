@@ -6,7 +6,7 @@
 This module provides functions for the validation of the use of ``fpmlib`` package.
 """
 
-from typing import Any, Callable
+from typing import Any, Optional, Callable, cast
 from .typing import *
 __all__ = [
     'check_fixed_point_map', 'check_nonexpansive_map', 'check_firmly_nonexpansive_map',
@@ -14,11 +14,19 @@ __all__ = [
 ]
 
 
-def __check_instance(t: type) -> Callable[[Any], None]:
-    def T(o: Any) -> None:
+def __check_instance(t: FixedPointMap) -> Callable[[Any], None]:
+    def T(o: Any, ndim: Optional[int]=None) -> None:
         if not isinstance(o, t):
             raise ValueError('Expected %s, but got %s' % (t.__name__, type(o).__name__))
-    T.__doc__ = 'Check if the given argument is an instance of %s class.' % t.__name__
+        o = cast(FixedPointMap, o)
+        if ndim is not None and o.ndim is not None and o.ndim != ndim:
+            raise ValueError('Expected %d-dimensional vector, but got %d-dimensional one' % (o.ndim, ndim))
+    T.__doc__ = 'Check if the given argument is an instance of ``%s`` class.' % t.__name__ + r"""
+
+    :param o: An object to be validated.
+    :param ndim: A number of vector dimensions which is expected as acceptable one to the given map.
+        If ``None`` is specified, this function will not validate the acceptable number of dimension to the given map.
+    """
     return T
 
 

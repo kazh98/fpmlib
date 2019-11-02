@@ -65,3 +65,15 @@ class TestBox(unittest.TestCase):
         p = Box(np.zeros(2), np.ones(2))
         x = np.array([0.5, 0.5])
         self.assertIsNot(p(x), x)
+
+    def test_lb_dim(self):
+        p = Box(np.zeros(5))
+        self.assertEqual(p.ndim, 5)
+
+    def test_ub_dim(self):
+        p = Box(-12, np.zeros(5))
+        self.assertEqual(p.ndim, 5)
+    
+    def test_none_dim(self):
+        p = Box(3, 5)
+        self.assertIsNone(p.ndim)

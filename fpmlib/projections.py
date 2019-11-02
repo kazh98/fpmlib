@@ -25,26 +25,36 @@ class Box(MetricProjection):
     For any ``ndarray`` vector :math:`x`, :math:`T(x)` is equivalent to :math:`\mathtt{np.clip}(x, \mathbf{lb}, \mathbf{ub})`.
 
     :param lb:
-        The ``ndarray`` vector whose element expresses the lower bound corresponding to each dimension.
+        An ``ndarray`` vector whose element expresses the lower bound corresponding to each dimension.
         If a ``float`` value is specified, it is dealt with as the vector whose all elements are set as the given value.
         If ``None`` is specified, the fixed point set of the created mapping is unbounded below.
     :param ub:
-        The ``ndarray`` vector whose element expresses the upper bound corresponding to each dimension.
+        An ``ndarray`` vector whose element expresses the upper bound corresponding to each dimension.
         If a ``float`` value is specified, it is dealt with as the vector whose all elements are set as the given value.
         If ``None`` is specified, the fixed point set of the created mapping is unbounded above.
     """
 
+    @property
+    def ndim(self):
+        if isinstance(self._lb, np.ndarray):
+            return self._lb.shape[0]
+        if isinstance(self._ub, np.ndarray):
+            return self._ub.shape[0]
+        return None
+
     def __init__(self, lb: Optional[Union[np.ndarray, float]]=None, ub: Optional[Union[np.ndarray, float]]=None):
-        self.lb = lb
-        self.ub = ub
+        if isinstance(lb, np.ndarray) and isinstance(ub, np.ndarray) and lb.shape != ub.shape:
+            raise ValueError('Vectors lb and ub must have the same number of dimensions')
+        self._lb = lb
+        self._ub = ub
 
     def __call__(self, x: np.ndarray) -> np.ndarray:
-        return np.clip(x, self.lb, self.ub)
+        return np.clip(x, self._lb, self._ub)
 
     def __contains__(self, x: np.ndarray) -> bool:
-        if self.lb is not None and not (self.lb <= x).all():
+        if self._lb is not None and not (self._lb <= x).all():
             return False
-        if self.ub is not None and not (x <= self.ub).all():
+        if self._ub is not None and not (x <= self._ub).all():
             return False
         return True
 
@@ -59,9 +69,9 @@ class HalfSpace(MetricProjection):
     where :math:`w\in\mathbb{R}^N\setminus\{0\}` and :math:`d\in\mathbb{R}`.
 
     :param w:
-        The ``ndarray`` vector which defines the half-space as its parameter :math:`w`.
+        An ``ndarray`` vector which defines the half-space as its parameter :math:`w`.
     :param d:
-        The ``float`` value which defines the half-space as its parameter :math:`d`.
+        A ``float`` value which defines the half-space as its parameter :math:`d`.
     """
 
     def __init__(self, w: np.ndarray, d: float):
@@ -82,9 +92,9 @@ class Ball(MetricProjection):
         B:=\{x\in\mathbb{R}^N:\|x-c\|\le r\}.
 
     :param c:
-        The ``ndarray`` vector which expresses the center of the closed ball.
+        An ``ndarray`` vector which expresses the center of the closed ball.
     :param r:
-        The ``float`` value which expresses the radius of the closed ball.
+        A ``float`` value which expresses the radius of the closed ball.
     """
 
     def __init__(self, w: np.ndarray, d: float):
