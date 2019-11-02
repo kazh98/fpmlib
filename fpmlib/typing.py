@@ -12,7 +12,7 @@ from __future__ import annotations
 import numpy as np
 from abc import abstractmethod
 from collections.abc import Callable, Container
-from typing import Optional
+from typing import Any, Optional
 __all__ = ['FixedPointMap', 'NonexpansiveMap', 'FirmlyNonexpansiveMap', 'MetricProjection']
 
 
@@ -41,7 +41,7 @@ class FixedPointMap(Callable, Container):
         raise NotImplementedError()
 
     @abstractmethod
-    def __contains__(self, x: np.ndarray) -> bool:
+    def __contains__(self, x: Any) -> bool:
         r"""
         Return ``True`` if the given point :math:`x` is a fixed point of this mapping :math:`T`, that is, :math:`x\in\mathrm{Fix}(T):=\{u\in H:T(u)=u\}`.
         Otherwise, return ``False``.

@@ -121,6 +121,16 @@ class TestBox(unittest.TestCase):
         self.assertFalse(np.array([4, 4]) in p)
         self.assertFalse(np.array([4, 5]) in p)
 
+    def test_contains_invalid_lb(self):
+        p = Box(np.array([1, -1]))
+        self.assertFalse("" in p)
+        self.assertFalse(np.array([1, 2, 3]) in p)
+
+    def test_contains_invalid_ub(self):
+        p = Box(-2, np.array([1, -1]))
+        self.assertFalse("" in p)
+        self.assertFalse(np.array([1, 2, 3]) in p)
+
 
 class TestHalfSpace(unittest.TestCase):
     def test_behavior(self):
@@ -190,6 +200,11 @@ class TestHalfSpace(unittest.TestCase):
         self.assertTrue(np.array([0.5, -0.5]) in p)
         self.assertFalse(np.array([1, -1]) in p)
 
+    def test_contains_invalid(self):
+        p = HalfSpace(np.array([1, -1]), 1)
+        self.assertFalse("" in p)
+        self.assertFalse(np.array([1, 2, 3]) in p)
+
 
 class TestBall(unittest.TestCase):
     def test_behavior(self):
@@ -247,3 +262,8 @@ class TestBall(unittest.TestCase):
         self.assertTrue(np.array([1, -2]) in p)
         self.assertTrue(np.array([1, -1]) in p)
         self.assertFalse(np.array([1, -0.9]) in p)
+
+    def test_contains_invalid(self):
+        p = Ball(np.array([1, -2]), 1)
+        self.assertFalse("" in p)
+        self.assertFalse(np.array([1, 2, 3]) in p)

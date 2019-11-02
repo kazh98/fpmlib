@@ -54,14 +54,22 @@ class Box(MetricProjection):
         self._lb = lb
         self._ub = ub
 
-    def __call__(self, x: np.ndarray) -> np.ndarray:
+    def __call__(self, x):
         return np.clip(x, self._lb, self._ub)
 
-    def __contains__(self, x: np.ndarray) -> bool:
-        if self._lb is not None and not (self._lb <= x).all():
+    def __contains__(self, x):
+        if not isinstance(x, np.ndarray):
             return False
-        if self._ub is not None and not (x <= self._ub).all():
-            return False
+        if self._lb is not None:
+            if isinstance(self._lb, np.ndarray) and self._lb.shape != x.shape:
+                return False
+            if not (self._lb <= x).all():
+                return False
+        if self._ub is not None:
+            if isinstance(self._ub, np.ndarray) and self._ub.shape != x.shape:
+                return False
+            if not (x <= self._ub).all():
+                return False
         return True
 
 
@@ -94,7 +102,7 @@ class HalfSpace(MetricProjection):
         self._w = w / l
         self._d = d / l
 
-    def __call__(self, x: np.ndarray) -> np.ndarray:
+    def __call__(self, x):
         det = self._d - np.inner(self._w, x)
         if det >= 0:
             y = x.copy()
@@ -103,7 +111,10 @@ class HalfSpace(MetricProjection):
             y += x
         return y
 
-    def __contains__(self, x: np.ndarray) -> bool:
+    def __contains__(self, x):
+        if not isinstance(x, np.ndarray) or x.shape != self._w.shape:
+            return False
+
         return (self._d - np.inner(self._w, x)) >= 0
 
 
@@ -133,7 +144,7 @@ class Ball(MetricProjection):
         self._c = c.copy()
         self._r = r
 
-    def __call__(self, x: np.ndarray) -> np.ndarray:
+    def __call__(self, x):
         v = x - self._c
         d = np.linalg.norm(v)
         if d <= self._r:
@@ -143,5 +154,8 @@ class Ball(MetricProjection):
             v += self._c
             return v
 
-    def __contains__(self, x: np.ndarray) -> bool:
+    def __contains__(self, x):
+        if not isinstance(x, np.ndarray) or x.shape != self._c.shape:
+            return False
+
         return np.linalg.norm(x - self._c) <= self._r
