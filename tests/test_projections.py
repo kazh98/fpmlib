@@ -129,3 +129,50 @@ class TestHalfSpace(unittest.TestCase):
     def test_ndim(self):
         p = HalfSpace(np.ones(5), 1)
         self.assertEqual(p.ndim, 5)
+
+
+class TestBall(unittest.TestCase):
+    def test_behavior(self):
+        p = Ball(np.array([2., -3.]), 1.)
+        np.testing.assert_equal(
+            p(np.array([2., -3.])), np.array([2., -3.]))
+        np.testing.assert_equal(
+            p(np.array([1., -3.])), np.array([1., -3.]))
+        np.testing.assert_equal(
+            p(np.array([3., -3.])), np.array([3., -3.]))
+        np.testing.assert_equal(
+            p(np.array([2., -4.])), np.array([2., -4.]))
+        np.testing.assert_equal(
+            p(np.array([2., -2.])), np.array([2., -2.]))
+        np.testing.assert_almost_equal(
+            p(np.array([2., -1.])), np.array([2., -2.]))
+        np.testing.assert_almost_equal(
+            p(np.array([5., -3.])), np.array([3., -3.]))
+        np.testing.assert_almost_equal(
+            p(np.array([3., -2.])), np.array([2., -3.]) + 2 ** -0.5)
+
+    def test_c_changed(self):
+        c = np.array([1., 1.])
+        p = Ball(c, 1.)
+        c[0] = 3.
+        np.testing.assert_equal(
+            p(np.array([1., 1.])), np.array([1., 1.]))
+
+    def test_reallocation(self):
+        p = Ball(np.array([2., -3.]), 1.)
+        x = np.array([2., -3.])
+        self.assertIsNot(p(x), x)
+        x = np.array([3., -2.])
+        self.assertIsNot(p(x), x)
+
+    def test_negative_radius(self):
+        with self.assertRaisesRegex(ValueError, 'must be a positive real'):
+            Ball(np.zeros(10), -1)
+
+    def test_matrix(self):
+        with self.assertRaisesRegex(ValueError, 'must be a vector'):
+            Ball(np.ones([5, 5]), 1)
+
+    def test_ndim(self):
+        p = Ball(np.ones(5), 1)
+        self.assertEqual(p.ndim, 5)

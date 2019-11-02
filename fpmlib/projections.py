@@ -117,11 +117,27 @@ class Ball(MetricProjection):
         A ``float`` value which expresses the radius of the closed ball.
     """
 
-    def __init__(self, w: np.ndarray, d: float):
-        raise NotImplementedError()
+    @property
+    def ndim(self) -> int:
+        return self._c.shape[0]
+
+    def __init__(self, c: np.ndarray, r: float):
+        if r < 0:
+            raise ValueError('Parameter `r` must be a positive real.')
+        if not isinstance(c, np.ndarray) or len(c.shape) != 1:
+            raise ValueError('Parameter `c` must be a vector.')
+        self._c = c.copy()
+        self._r = r
 
     def __call__(self, x: np.ndarray) -> np.ndarray:
-        raise NotImplementedError()
+        v = x - self._c
+        d = np.linalg.norm(v)
+        if d <= self._r:
+            return x.copy()
+        else:
+            v *= self._r / d
+            v += self._c
+            return v
 
     def __contains__(self, x: np.ndarray) -> bool:
-        raise NotImplementedError()
+        raise np.linalg.norm(x - self._c) <= self._r
