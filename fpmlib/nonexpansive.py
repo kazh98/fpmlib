@@ -20,6 +20,10 @@ class Intersection(NonexpansiveMap):
 
     .. math::
         T(x):=\frac{1}{K}\sum_{i=1}^K T_i(x).
+
+    This construction method is based on Propositions 4.9 and 4.47 in [Bauschke2017]_.
+
+    :param maps: A list of nonexpansive mappings.
     """
 
     @property

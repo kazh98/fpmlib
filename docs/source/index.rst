@@ -17,6 +17,7 @@ Contents
     ./introduction
     ./tutorial
     ./reference
+    ./bibliography
 
 
 Indices and tables
