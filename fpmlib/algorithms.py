@@ -101,6 +101,8 @@ def find(
         beta: Iterable[float]
             A step size sequence to be used as an acceleration parameter.
             When ``method = 'Hishinuma2015'``, it is passed to Algorithm 3.1 in [Hishinuma2015]_ as the parameter :math:`\{\beta_n\}`.
+        
+    :return: the obtained solution.
     """
 
     if len(x0.shape) != 1:
