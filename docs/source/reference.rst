@@ -8,4 +8,5 @@ The standard inner product :math:`\langle\cdot,\cdot\rangle:\mathbb{R}^N\times\m
     :special-members:
 .. automodule:: fpmlib.projections
 .. automodule:: fpmlib.nonexpansive
+.. automodule:: fpmlib.algorithms
 .. automodule:: fpmlib.contracts
