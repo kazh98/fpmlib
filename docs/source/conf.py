@@ -53,6 +53,12 @@ autodoc_default_flags = [
 # a list of builtin themes.
 #
 html_theme = 'alabaster'
+html_theme_options = {
+    'github_user': 'kazh98',
+    'github_repo': 'fpmlib',
+    'github_button': True,
+    'github_banner': True
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
