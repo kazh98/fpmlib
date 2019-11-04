@@ -42,7 +42,7 @@ class Intersection(NonexpansiveMap):
         self._ndim = ndim
 
     def __call__(self, x):
-        return np.average([m(x) for m in self._maps])
+        return np.average([m(x) for m in self._maps], axis=0)
 
     def __contains__(self, x):
         return all(x in m for m in self._maps)

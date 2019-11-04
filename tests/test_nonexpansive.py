@@ -19,6 +19,19 @@ class TestIntersection(unittest.TestCase):
         self.assertFalse(np.array([2]) in p)
         np.testing.assert_almost_equal(p(np.array([2])), np.array([1.5]))
 
+    def test_ndim(self):
+        p = Intersection([HalfSpace(np.array([1, 0]), 1), HalfSpace(np.array([0, 1]), 1)])
+        self.assertTrue(np.array([0, 0]) in p)
+        np.testing.assert_equal(p(np.array([0, 0])), np.array([0, 0]))
+        self.assertTrue(np.array([1, 0]) in p)
+        np.testing.assert_equal(p(np.array([1, 0])), np.array([1, 0]))
+        self.assertTrue(np.array([0, 1]) in p)
+        np.testing.assert_equal(p(np.array([0, 1])), np.array([0, 1]))
+        self.assertTrue(np.array([1, 1]) in p)
+        np.testing.assert_equal(p(np.array([1, 1])), np.array([1, 1]))
+        self.assertFalse(np.array([2, 2]) in p)
+        np.testing.assert_almost_equal(p(np.array([2, 2])), np.array([1.5, 1.5]))
+
     def test_ndim_none(self):
         p = Intersection([Box(0), HalfSpace(np.array([1, 1]), 1)])
         self.assertEqual(p.ndim, 2)
